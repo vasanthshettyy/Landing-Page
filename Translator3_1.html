@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoTranslate Pro - AI Universal Translator </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Parallax Background */
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 120%;
+            height: 120%;
+            background-image: url('Bgimage.jpeg');
+            background-size: auto,auto;
+            background-position: center;
+            background-repeat: repeat-y;
+            z-index: -2;
+            will-change: transform;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.9) 0%, rgba(26, 26, 46, 0.85) 50%, rgba(22, 33, 62, 0.9) 100%);
+            /* z-index: -1; */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .Left {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .content-left {
+            text-align: left;
+        }
+
+        .header {
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .tagline {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .problem-solution {
+            display: grid;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .ps-card {
+            background: rgba(42, 42, 42, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            opacity: 63%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .ps-card:hover {
+            transform: translateY(-5px);
+            opacity: 95%;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+            border-color: rgba(0, 255, 255, 0.5);
+        }
+
+        .ps-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .ps-text {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+
+
+        /* Device Display */
+        .device-column {
+            position: relative;
+            height: 100%;
+        }
+
+        .device-display {
+            position: sticky;
+            top: 1%;      
+            align-self: start;
+        }
+
+
+
+
+        .device {
+            width: 300px;
+            height: 700px;
+            background-image: url('Device.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: relative;
+        }
+
+        .translation-text {
+            position: absolute;
+            top: 20%;
+            left: 15%;
+            right: 15%;
+            height: 45%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .source-text {
+            font-size: 1rem;
+            color: #00ffff;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: typeIn 2s ease-out 1s both;
+        }
+
+        .translated-text {
+            font-size: 1rem;
+            color: #ff00ff;
+            opacity: 0;
+            animation: typeIn 2s ease-out 2.5s both;
+        }
+
+        @keyframes typeIn {
+            0% { opacity: 0; transform: translateX(-20px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .feature-card {
+            background: rgba(42, 42, 42, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+            border-color: rgba(0, 255, 255, 0.5);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .feature-text {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* Specifications */
+        .specs {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .specs h3 {
+            color: #00ffff;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .spec-label {
+            color: #ff00ff;
+            font-weight: bold;
+        }
+
+        .spec-value {
+            color: #ffffff;
+        }
+
+        /* Email Signup */
+        .email-signup {
+            background: rgba(42, 42, 42, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .email-signup h3 {
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            background-clip: text;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .email-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 400px;
+            margin: 1rem auto;
+            flex-wrap: wrap;
+        }
+
+        .email-input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #ffffff;
+            font-size: 1rem;
+            min-width: 200px;
+        }
+
+     
+
+        .wishlist-btn {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.5);
+        }
+
+    
+
+        /* Footer */
+       .footer{
+            background: rgba(42, 42, 42, 0.9);
+            border-radius: 15px;
+            padding: 2rem 1rem 5rem;
+            opacity: 63%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            width: 100%;
+
+        }
+
+        .footer-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight:bold;
+            margin-bottom: 0.5rem; 
+        }
+
+        .footer-content {
+            text-align: center;
+            font-size: 1rem;
+            margin: 0 auto;
+            gap:1rem;
+            opacity: 80%;
+        }   
+       
+    </style>
+</head>
+<body>
+    <div class="bg-image" id="parallaxBg"></div>
+    <div class="bg-overlay"></div>
+    
+    <div class="container">
+        <div class="Left">
+            <div class="content-left">
+                <header class="header">
+                    <h1 class="logo">NeoTranslate Pro</h1>
+                    <p class="tagline">Breaking Language Barriers with AI Precision</p>
+                    <p class="description">
+                        Experience real-time translation across 150+ languages with 99.7% accuracy.
+                        The future of global communication is coming soon.
+                    </p>
+                </header>
+              
+            <div class="problem-solution">
+                <div class="ps-card">
+                <h2 class="ps-title">🌍 The Problem</h2>
+                    <p class="ps-text">
+                        <ul class="ps-text">
+                            <li>Travelers struggle to ask directions, order food, or connect with locals.</li>
+                            <li>Businesses lose opportunities due to language barriers.</li>
+                            <li>Students and professionals face difficulties accessing foreign knowledge.</li>
+                            <li>Translation apps are slow, drain battery, and often feel inaccurate.</li>
+                        </ul>
+                    </p>
+                    </div>
+                <div class="ps-card">
+                <h2 class="ps-title">🚀 The Solution</h2>
+                    <ul class="ps-text">
+                    <li><strong>Neo Translate pro</strong> That allows you to confidently anywhere.</li>                
+                    <li>Conversations feel natural — no more awkward pauses while waiting for apps to load.</li>   
+                    <li>Stay connected with locals, colleagues, and clients across cultures.</li>
+                    <li>Freedom from phone dependency — a dedicated device that's always ready.</li>
+                    </ul>
+                </div>
+            </div>
+             
+
+                            
+                    <div class="problem-solution">
+                        <div class="ps-card">
+                            <h2 class="ps-title">✅ Advantages</h2>
+                            <ul class="ps-text">
+                                <li>Easy to use — no complex setup or apps needed.</li>
+                                <li>Works Offline— No internet connection required to use. </li>
+                                <li>Portable — small, lightweight, and always with you.</li>
+                                <li>Reliable — works online or offline when you need it most.</li>
+                                <li>Confidence booster — connect with anyone, anywhere, without fear of miscommunication.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    
+                    <div class="problem-solution">
+                        <div class="ps-card">
+                            <h2 class="ps-title">👥 Who Can Use This Device?</h2>
+                            <ul class="ps-text">
+                                <li><strong>Travelers</strong> </li>
+                                <li><strong>Business Professionals</strong></li>
+                                <li><strong>Students</strong> </li>
+                                <li><strong>Researchers</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+               
+
+                <div class="specs">
+                    <h3>Technical Specifications</h3>
+                    <div class="spec-grid">
+                        <div class="spec-item">
+                            <span class="spec-label">Languages:</span>
+                            <span class="spec-value">150+</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Battery Life:</span>
+                            <span class="spec-value">72 hours</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Response Time:</span>
+                            <span class="spec-value">0.3 seconds</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Accuracy:</span>
+                            <span class="spec-value">99.7%</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Connectivity:</span>
+                            <span class="spec-value">5G, WiFi 6</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Weight:</span>
+                            <span class="spec-value">85g</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">🌐</div>
+                        <h3 class="feature-title">Universal Translation</h3>
+                        <p class="feature-text">Instantly translate between 150+ languages with neural AI precision.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title">Lightning Fast</h3>
+                        <p class="feature-text">Get translations in under 0.3 seconds with advanced processing.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3 class="feature-title">Context Aware</h3>
+                        <p class="feature-text">AI understands context, idioms, and cultural nuances.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🔋</div>
+                        <h3 class="feature-title">Ultra Endurance</h3>
+                        <p class="feature-text">72-hour battery life with rapid charging capability.</p>
+                    </div>
+                </div>
+
+
+                <div class="email-signup">
+                    <h3>Get Notified When Available</h3>
+                    <p>Be the first to know when NeoTranslate Pro launches. Join our wishlist for exclusive early access.</p>
+                    
+                    <form class="email-form" id="emailForm">
+                        <input 
+                            type="email" 
+                            class="email-input" 
+                            id="emailInput"
+                            placeholder="Enter your Gmail address"
+                            required>
+                        <button type="submit" class="wishlist-btn">💕 Add to Wishlist</button>
+                    </form>
+                    
+                    
+                </div>
+            </div>
+
+            <div class="device-column">
+                <div class="device-display">
+                    <div class="device">
+                        <div class="translation-text">
+                            <div class="source-text" id="sourceText">"Hello, how are you today?"</div>
+                            <div class="translated-text" id="translatedText">"Hola, ¿cómo estás hoy?"</div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              </div>
+
+    <footer class="footer">
+            <div class="footer-title">
+                <p>Designed by team <strong>Amazon</strong></p>
+                </div>
+                <div class="footer-content">
+                <p>Members:</p>
+            </div>
+    </footer>
+
+<script>
+    function cycleTranslations() {
+        const translations = [
+            { source: '"Hello, how are you today?"', target: '"Hola, ¿cómo estás hoy?"' },
+            { source: '"Where is the nearest café?"', target: '"Où est le café le plus proche?"' },
+            { source: '"Thank you very much!"', target: '"Domo arigato gozaimasu!"' },
+            { source: '"I love this place"', target: '"Ich liebe diesen Ort"' },
+            { source: '"See you tomorrow"', target: '"À demain"' }
+        ];
+        
+        let i = 0;
+        const src = document.getElementById('sourceText');
+        const tgt = document.getElementById('translatedText');
+
+        setInterval(() => {
+            i = (i + 1) % translations.length;
+            src.textContent = translations[i].source;
+            tgt.textContent = translations[i].target;
+
+            // restart animation
+            [src, tgt].forEach(el => {
+                el.style.animation = 'none';
+                el.offsetHeight; 
+                el.style.animation = '';
+            });
+        }, 4000);
+    }
+
+    document.addEventListener('DOMContentLoaded', cycleTranslations);
+</script>
+
+</body>
+</html>
